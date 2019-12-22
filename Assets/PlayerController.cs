@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour
     public Rigidbody possessionTarget;
     private Rigidbody rb;
     private Rigidbody rbToControl;
-    
+    public GameObject gameObject;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -51,11 +52,14 @@ public class PlayerController : MonoBehaviour
     void HandlePossesion()
     {
         if(Input.GetKeyDown(KeyCode.Space)) {
-            if(inCollider) {
+            if(inCollider && rbToControl == rb) {
                 rbToControl = possessionTarget;
+                gameObject.GetComponent<Renderer>().enabled = false;
+                
             }
             else {
                 rbToControl = rb;
+                gameObject.GetComponent<Renderer>().enabled = true;
             }
         }
     }
