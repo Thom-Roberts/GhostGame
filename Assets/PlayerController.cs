@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private Rigidbody rbToControl;
     public new GameObject gameObject;
+    public CameraController camera;
 
     void Start()
     {
@@ -55,13 +56,13 @@ public class PlayerController : MonoBehaviour
             if(inCollider && rbToControl == rb) {
                 rbToControl = possessionTarget;
                 gameObject.GetComponent<Renderer>().enabled = false;
-                
             }
             else {
                 rbToControl = rb;
                 gameObject.GetComponent<Renderer>().enabled = true;
             }
         }
+        camera.SetTransformToFollow(rbToControl.GetComponent<Transform>());
     }
 
     public void SetPosessionTarget(Rigidbody target)
