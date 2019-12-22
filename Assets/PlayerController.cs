@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     public float acceleration;
     public float maxSpeed;
     public float slowDownFactor;
+    public bool inCollider;
+    public GameObject possessionTarget;
     private Rigidbody rb;
 
     void Start()
@@ -38,5 +40,24 @@ public class PlayerController : MonoBehaviour
             // slow down the object
             rb.velocity *= slowDownFactor;
         }
+    }
+
+    void HandlePossesion()
+    {
+        
+    }
+
+    public void SetPosessionTarget(GameObject target)
+    {
+        Debug.Log("Set new possesion target");
+        possessionTarget = target;
+        inCollider = true;
+    }
+
+    public void RemovePossessionTarget()
+    {
+        Debug.Log("Removing possession target");
+        possessionTarget = null;
+        inCollider = false;
     }
 }
