@@ -8,12 +8,18 @@ public class PlayerController : MonoBehaviour
     public float maxSpeed;
     public float slowDownFactor;
     public bool inCollider;
-    public GameObject possessionTarget;
+    public Rigidbody possessionTarget;
     private Rigidbody rb;
-
+    private Rigidbody rbToControl;
+    
     void Start()
     {
-        rb = GetComponent<Rigidbody>();   
+        rb = GetComponent<Rigidbody>();
+        rbToControl = rb;
+    }
+
+    void Update() {
+        HandlePossesion();
     }
 
     void FixedUpdate()
@@ -27,27 +33,34 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 force = Vector3.right * acceleration;
             Vector3 velocity = rb.velocity + force;
-            rb.velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
+            rbToControl.velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             Vector3 force = Vector3.left * acceleration;
             Vector3 velocity = rb.velocity + force;
-            rb.velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
+            rbToControl.velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
         }
         else
         {
             // slow down the object
-            rb.velocity *= slowDownFactor;
+            rbToControl.velocity *= slowDownFactor;
         }
     }
 
     void HandlePossesion()
     {
-        
+        if(Input.GetKeyDown(KeyCode.Space)) {
+            if(inCollider) {
+                rbToControl = possessionTarget;
+            }
+            else {
+                rbToControl = rb;
+            }
+        }
     }
 
-    public void SetPosessionTarget(GameObject target)
+    public void SetPosessionTarget(Rigidbody target)
     {
         Debug.Log("Set new possesion target");
         possessionTarget = target;

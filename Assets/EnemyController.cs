@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour
 
         if(temp != null)
         {
-            temp.SetPosessionTarget(GetComponent<GameObject>());
+            temp.SetPosessionTarget(GetComponent<Rigidbody>());
         }
     }
 
