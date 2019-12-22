@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     public Rigidbody possessionTarget;
     private Rigidbody rb;
     private Rigidbody rbToControl;
-    public GameObject gameObject;
+    public new GameObject gameObject;
 
     void Start()
     {
