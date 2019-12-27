@@ -9,15 +9,15 @@ public class PlayerController : MonoBehaviour
     public float slowDownFactor;
     public bool inCollider;
     public Rigidbody possessionTarget;
-    private Rigidbody rb;
+    private Rigidbody playerRb; // Solely here as a reference
     private Rigidbody rbToControl;
     public new GameObject gameObject;
     public CameraController camera;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        rbToControl = rb;
+        playerRb = GetComponent<Rigidbody>();
+        rbToControl = playerRb;
     }
 
     void Update() {
@@ -34,13 +34,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow))
         {
             Vector3 force = Vector3.right * acceleration;
-            Vector3 velocity = rb.velocity + force;
+            Vector3 velocity = playerRb.velocity + force;
             rbToControl.velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             Vector3 force = Vector3.left * acceleration;
-            Vector3 velocity = rb.velocity + force;
+            Vector3 velocity = playerRb.velocity + force;
             rbToControl.velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
         }
         else
@@ -53,12 +53,18 @@ public class PlayerController : MonoBehaviour
     void HandlePossesion()
     {
         if(Input.GetKeyDown(KeyCode.Space)) {
-            if(inCollider && rbToControl == rb) {
+            // Check if the currently active rigidbody is the players. If so,
+            // and we are able to change it, do so.
+            if(inCollider && rbToControl == playerRb) {
+                // Freezing velocity courtesy of: https://answers.unity.com/questions/12878/how-do-i-zero-out-the-velocity-of-an-object.html
+                // That way, we don't run into the back of the object in front of it
+                rbToControl.velocity = Vector3.zero;
+                rbToControl.angularVelocity = Vector3.zero;
                 rbToControl = possessionTarget;
                 gameObject.GetComponent<Renderer>().enabled = false;
             }
             else {
-                rbToControl = rb;
+                rbToControl = playerRb;
                 gameObject.GetComponent<Renderer>().enabled = true;
             }
         }
