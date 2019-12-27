@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 force = Vector3.right * acceleration;
             Vector3 velocity = playerRb.velocity + force;
+            // NOTE: The player's gravity is slowed by this as well. Undecided if I want to keep this or not
             rbToControl.velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
