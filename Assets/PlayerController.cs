@@ -8,11 +8,14 @@ public class PlayerController : MonoBehaviour
     public float maxSpeed;
     public float slowDownFactor;
     public bool inCollider;
+    // The distance that should be seperated when possession is released
+    public float releaseOffsetX;
+    public float releaseOffsetY;
+    
     public Rigidbody possessionTarget;
     private Rigidbody playerRb; // Solely here as a reference
     private Rigidbody rbToControl;
-    public new GameObject gameObject;
-    public CameraController camera;
+    public new CameraController camera;
 
     void Start()
     {
@@ -61,11 +64,17 @@ public class PlayerController : MonoBehaviour
                 rbToControl.velocity = Vector3.zero;
                 rbToControl.angularVelocity = Vector3.zero;
                 rbToControl = possessionTarget;
-                gameObject.GetComponent<Renderer>().enabled = false;
+                GetComponent<Renderer>().enabled = false;
+                var currentPosition = transform.position; // Move it up into the sky
+                transform.position = new Vector3(currentPosition.x, currentPosition.y + 1000, currentPosition.z); // Move up into the sky
+                playerRb.useGravity = false;
             }
             else {
+                var possesedPosition = rbToControl.position;
                 rbToControl = playerRb;
-                gameObject.GetComponent<Renderer>().enabled = true;
+                transform.position = new Vector3(possesedPosition.x + releaseOffsetX, possesedPosition.y + releaseOffsetY, possesedPosition.z);
+                playerRb.useGravity = true;
+                GetComponent<Renderer>().enabled = true;
             }
         }
         camera.SetTransformToFollow(rbToControl.GetComponent<Transform>());
@@ -73,14 +82,12 @@ public class PlayerController : MonoBehaviour
 
     public void SetPosessionTarget(Rigidbody target)
     {
-        Debug.Log("Set new possesion target");
         possessionTarget = target;
         inCollider = true;
     }
 
     public void RemovePossessionTarget()
     {
-        Debug.Log("Removing possession target");
         possessionTarget = null;
         inCollider = false;
     }

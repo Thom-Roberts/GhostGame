@@ -571,8 +571,9 @@ MonoBehaviour:
   maxSpeed: 5
   slowDownFactor: 0.8
   inCollider: 0
+  releaseOffsetX: -1.25
+  releaseOffsetY: 0.5
   possessionTarget: {fileID: 0}
-  gameObject: {fileID: 1668196406}
   camera: {fileID: 963194229}
 --- !u!1 &2090895196
 GameObject:
