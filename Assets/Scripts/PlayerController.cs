@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rbToControl;
     public new CameraController camera;
 
+    public GameObject smokeEffect;
+
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
@@ -37,14 +39,15 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow))
         {
             Vector3 force = Vector3.right * acceleration;
-            Vector3 velocity = playerRb.velocity + force;
+            Vector3 velocity = rbToControl.velocity + force;
             // NOTE: The player's gravity is slowed by this as well. Undecided if I want to keep this or not
             rbToControl.velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
+            Debug.Log(rbToControl.velocity);
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             Vector3 force = Vector3.left * acceleration;
-            Vector3 velocity = playerRb.velocity + force;
+            Vector3 velocity = rbToControl.velocity + force;
             rbToControl.velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
         }
         else
@@ -64,18 +67,20 @@ public class PlayerController : MonoBehaviour
                 // That way, we don't run into the back of the object in front of it
                 rbToControl.velocity = Vector3.zero;
                 rbToControl.angularVelocity = Vector3.zero;
+
                 rbToControl = possessionTarget;
+                Instantiate(smokeEffect, transform.position, Quaternion.identity);
+                // Hide object from the scene
                 GetComponent<Renderer>().enabled = false;
-                var currentPosition = transform.position; // Move it up into the sky
-                transform.position = new Vector3(currentPosition.x, currentPosition.y + 1000, currentPosition.z); // Move up into the sky
-                playerRb.useGravity = false;
+                GetComponent<Collider>().enabled = false;
             }
-            else {
+            else if (rbToControl != playerRb) {
                 var possesedPosition = rbToControl.position;
                 rbToControl = playerRb;
                 transform.position = new Vector3(possesedPosition.x + releaseOffsetX, possesedPosition.y + releaseOffsetY, possesedPosition.z);
-                playerRb.useGravity = true;
+                Instantiate(smokeEffect, transform.position, Quaternion.identity);
                 GetComponent<Renderer>().enabled = true;
+                GetComponent<Collider>().enabled = true;
             }
         }
         camera.SetTransformToFollow(rbToControl.GetComponent<Transform>());
