@@ -578,7 +578,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: aeff58badb9c64e4d8f12e135c8c2d91, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -916,6 +916,8 @@ MonoBehaviour:
   releaseOffsetY: 1
   possessionTarget: {fileID: 0}
   camera: {fileID: 963194229}
+  defaultMaterial: {fileID: 2100000, guid: aeff58badb9c64e4d8f12e135c8c2d91, type: 2}
+  possessMaterial: {fileID: 2100000, guid: 0d2d3d2d80e32a34f86e5e916ea4d9c5, type: 2}
   smokeEffect: {fileID: 1329845292236604, guid: 9bba9cf244c53c5439505dfc96fdd11c,
     type: 3}
 --- !u!1 &2090895196

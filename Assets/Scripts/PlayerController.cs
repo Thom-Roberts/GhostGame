@@ -16,7 +16,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody playerRb; // Solely here as a reference
     private Rigidbody rbToControl;
     public new CameraController camera;
-
+    public Material defaultMaterial;
+    public Material possessMaterial;
     public GameObject smokeEffect;
 
     void Start()
@@ -67,17 +68,26 @@ public class PlayerController : MonoBehaviour
                 // That way, we don't run into the back of the object in front of it
                 rbToControl.velocity = Vector3.zero;
                 rbToControl.angularVelocity = Vector3.zero;
-
+                
                 rbToControl = possessionTarget;
                 Instantiate(smokeEffect, transform.position, Quaternion.identity);
                 // Hide object from the scene
                 GetComponent<Renderer>().enabled = false;
                 GetComponent<Collider>().enabled = false;
+
+                // Apply the new shader to our possesed object
+                var newRenderer = rbToControl.GetComponent<MeshRenderer>();
+                newRenderer.material = possessMaterial;
+
             }
             else if (rbToControl != playerRb) {
                 var possesedPosition = rbToControl.position;
+                var oldRenderer = rbToControl.GetComponent<MeshRenderer>();
+                oldRenderer.material = defaultMaterial;
+                
                 rbToControl = playerRb;
-                transform.position = new Vector3(possesedPosition.x + releaseOffsetX, possesedPosition.y + releaseOffsetY, possesedPosition.z);
+                transform.position = new Vector3(possesedPosition.x + releaseOffsetX, Mathf.Abs(possesedPosition.y) + releaseOffsetY, possesedPosition.z);
+                
                 Instantiate(smokeEffect, transform.position, Quaternion.identity);
                 GetComponent<Renderer>().enabled = true;
                 GetComponent<Collider>().enabled = true;
