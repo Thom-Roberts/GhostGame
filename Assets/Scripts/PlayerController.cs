@@ -6,7 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     public float acceleration;
     public float maxSpeed;
-    public float slowDownFactor;
+    [Range(0, 1)]
+    public float slowDownFactor = 0.9f;
     public bool inCollider;
     // The distance that should be seperated when possession is released
     public float releaseOffsetX;
@@ -41,15 +42,18 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 force = Vector3.right * acceleration;
             Vector3 velocity = rbToControl.velocity + force;
-            // NOTE: The player's gravity is slowed by this as well. Undecided if I want to keep this or not
-            rbToControl.velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
-            Debug.Log(rbToControl.velocity);
+            // We don't want to clamp the falling y speed, just how fast we can go right->left.
+            var xSpeed = velocity.x;
+            xSpeed = Mathf.Clamp(xSpeed, -maxSpeed, maxSpeed);
+            rbToControl.velocity = new Vector3(xSpeed, velocity.y, velocity.z);
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             Vector3 force = Vector3.left * acceleration;
             Vector3 velocity = rbToControl.velocity + force;
-            rbToControl.velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
+            var xSpeed = velocity.x;
+            xSpeed = Mathf.Clamp(xSpeed, -maxSpeed, maxSpeed);
+            rbToControl.velocity = new Vector3(xSpeed, velocity.y, velocity.z);
         }
         else
         {
@@ -81,13 +85,15 @@ public class PlayerController : MonoBehaviour
 
             }
             else if (rbToControl != playerRb) {
-                var possesedPosition = rbToControl.position;
+                // Reset the object's color
                 var oldRenderer = rbToControl.GetComponent<MeshRenderer>();
                 oldRenderer.material = defaultMaterial;
-                
+
+                var possesedPosition = rbToControl.position;
+                var previousVelocity = rbToControl.velocity;
                 rbToControl = playerRb;
                 transform.position = new Vector3(possesedPosition.x + releaseOffsetX, Mathf.Abs(possesedPosition.y) + releaseOffsetY, possesedPosition.z);
-                
+                playerRb.velocity = previousVelocity;
                 Instantiate(smokeEffect, transform.position, Quaternion.identity);
                 GetComponent<Renderer>().enabled = true;
                 GetComponent<Collider>().enabled = true;
