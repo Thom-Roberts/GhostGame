@@ -598,6 +598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f7d5d41b7ce4be44a4bd43d9d3fd4b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  victoryMessage: {fileID: 89007137}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1640,7 +1641,7 @@ MonoBehaviour:
   inCollider: 0
   releaseOffsetX: -2
   releaseOffsetY: 1
-  possessionTarget: {fileID: 0}
+  possessionTargets: []
   camera: {fileID: 963194229}
   defaultMaterial: {fileID: 2100000, guid: aeff58badb9c64e4d8f12e135c8c2d91, type: 2}
   possessMaterial: {fileID: 2100000, guid: 0d2d3d2d80e32a34f86e5e916ea4d9c5, type: 2}
