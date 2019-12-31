@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour
         PlayerController temp = other.GetComponent<PlayerController>();
         if(temp != null)
         {
-            temp.RemovePossessionTarget();
+            temp.RemovePossessionTarget(GetComponent<Rigidbody>());
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -13,7 +14,7 @@ public class PlayerController : MonoBehaviour
     public float releaseOffsetX;
     public float releaseOffsetY;
     
-    public Rigidbody possessionTarget;
+    public List<Rigidbody> possessionTargets;
     private Rigidbody playerRb; // Solely here as a reference
     private Rigidbody rbToControl;
     public new CameraController camera;
@@ -72,9 +73,15 @@ public class PlayerController : MonoBehaviour
                 // That way, we don't run into the back of the object in front of it
                 rbToControl.velocity = Vector3.zero;
                 rbToControl.angularVelocity = Vector3.zero;
-                
-                rbToControl = possessionTarget;
+
+                // I decided to take control of the last element we added, guessing that if the player is moving across the screen they want to posses
+                // the one they most recently came into contact with.
+                // I clear the targets afterwards so that we don't have lingering possessions and can be warped across the map
+                rbToControl = possessionTargets.Last();
+                possessionTargets.Clear();
+
                 Instantiate(smokeEffect, transform.position, Quaternion.identity);
+
                 // Hide object from the scene
                 GetComponent<Renderer>().enabled = false;
                 GetComponent<Collider>().enabled = false;
@@ -85,7 +92,7 @@ public class PlayerController : MonoBehaviour
 
             }
             else if (rbToControl != playerRb) {
-                // Reset the object's color
+                // Reset the possesed object's color
                 var oldRenderer = rbToControl.GetComponent<MeshRenderer>();
                 oldRenderer.material = defaultMaterial;
 
@@ -95,6 +102,8 @@ public class PlayerController : MonoBehaviour
                 transform.position = new Vector3(possesedPosition.x + releaseOffsetX, Mathf.Abs(possesedPosition.y) + releaseOffsetY, possesedPosition.z);
                 playerRb.velocity = previousVelocity;
                 Instantiate(smokeEffect, transform.position, Quaternion.identity);
+                
+                // Return the object to view
                 GetComponent<Renderer>().enabled = true;
                 GetComponent<Collider>().enabled = true;
             }
@@ -104,13 +113,17 @@ public class PlayerController : MonoBehaviour
 
     public void SetPosessionTarget(Rigidbody target)
     {
-        possessionTarget = target;
-        inCollider = true;
+        if(!possessionTargets.Contains(target)) {
+            possessionTargets.Add(target);
+            inCollider = true;
+        }
     }
 
-    public void RemovePossessionTarget()
+    public void RemovePossessionTarget(Rigidbody target)
     {
-        possessionTarget = null;
-        inCollider = false;
+        possessionTargets.Remove(target);
+        if(possessionTargets.Count == 0) {
+            inCollider = false;
+        }
     }
 }
