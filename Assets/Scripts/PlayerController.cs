@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour
                 GetComponent<Collider>().enabled = true;
             }
             camera.SetTransformToFollow(rbToControl.GetComponent<Transform>());
-        }
+        }   
     }
 
     public void SetPosessionTarget(Rigidbody target)
