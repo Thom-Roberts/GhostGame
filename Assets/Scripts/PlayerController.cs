@@ -96,19 +96,22 @@ public class PlayerController : MonoBehaviour
                 var oldRenderer = rbToControl.GetComponent<MeshRenderer>();
                 oldRenderer.material = defaultMaterial;
 
+                // The player position is at a fixed offset from the possesed object.
+                // After the player finishes the possesion, I want them to maintain the velocity, in case they're trying to fling themselves somewhere
                 var possesedPosition = rbToControl.position;
                 var previousVelocity = rbToControl.velocity;
                 rbToControl = playerRb;
                 transform.position = new Vector3(possesedPosition.x + releaseOffsetX, Mathf.Abs(possesedPosition.y) + releaseOffsetY, possesedPosition.z);
                 playerRb.velocity = previousVelocity;
+
                 Instantiate(smokeEffect, transform.position, Quaternion.identity);
                 
                 // Return the object to view
                 GetComponent<Renderer>().enabled = true;
                 GetComponent<Collider>().enabled = true;
             }
+            camera.SetTransformToFollow(rbToControl.GetComponent<Transform>());
         }
-        camera.SetTransformToFollow(rbToControl.GetComponent<Transform>());
     }
 
     public void SetPosessionTarget(Rigidbody target)
