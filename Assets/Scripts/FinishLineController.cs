@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class FinishLineController : MonoBehaviour
 {
+    public GameObject victoryMessage;
     private void OnTriggerEnter(Collider other) {
         if(other.CompareTag("Player")) {
-            Debug.Log("GOAL");
+            victoryMessage.SetActive(true);
         }
     }
 }
