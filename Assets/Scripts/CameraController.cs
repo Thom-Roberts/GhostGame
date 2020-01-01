@@ -7,10 +7,12 @@ public class CameraController : MonoBehaviour
     public Transform playerTransform;
     public Vector3 offset;
     public float dampingSpeed;
+    public float messageDisplayTime = 3f;
     private Vector3 velocity = Vector3.zero; // Used by the smooth damp function
 
     void Start() {
         transform.position = playerTransform.position + offset;
+        Invoke("HideExplanationMessage", messageDisplayTime);
     }
 
     // Much of the learning on how to do this was from: https://www.youtube.com/watch?v=MFQhpwc6cKE
@@ -24,5 +26,11 @@ public class CameraController : MonoBehaviour
 
     public void SetTransformToFollow(Transform transform) {
         playerTransform = transform;
+    }
+
+    private void HideExplanationMessage() {
+        var gameObject = GameObject.FindGameObjectWithTag("Information");
+        Debug.Log("Found game object: " + gameObject.name);
+        Destroy(gameObject);
     }
 }

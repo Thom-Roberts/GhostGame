@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Success
+  - Information
   layers:
   - Default
   - TransparentFX
