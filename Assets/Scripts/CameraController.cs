@@ -29,8 +29,8 @@ public class CameraController : MonoBehaviour
     }
 
     private void HideExplanationMessage() {
-        var gameObject = GameObject.FindGameObjectWithTag("Information");
-        Debug.Log("Found game object: " + gameObject.name);
-        Destroy(gameObject);
+        var infoMessage = GameObject.FindGameObjectWithTag("Information");
+        Debug.Log("Found game object: " + infoMessage.name);
+        Destroy(infoMessage);
     }
 }
